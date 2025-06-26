@@ -1,0 +1,46 @@
+<!DOCTYPE html><html><head>
+<meta charset="utf-8" />
+<style>
+  html,body{margin:0;padding:0;overflow:hidden;background:#ffd766}
+  #root{position:absolute;inset:0}
+  #log {position:fixed;left:0;bottom:0;width:100%;max-height:30%;
+        font:11px/14px monospace;background:rgba(0,0,0,.15);color:#0f0;
+        white-space:pre-wrap;overflow:auto;pointer-events:none}
+</style>
+</head><body>
+
+<div id="root"></div><pre id="log"></pre>
+
+<!-- Three.js UMD -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.min.js"></script>
+
+<!-- TalkingHead UMD (includes loaders and helpers) -->
+<script src="https://unpkg.com/@met4citizen/talkinghead@1.5/dist/talkinghead.umd.js"></script>
+
+<script>
+const modelUrl =
+  'https://models.readyplayer.me/64bfa15f0e72c63d7c3934a6.glb?morphTargets=mouthOpen';
+const camDist = 7;
+
+/* logger */
+function log(msg){
+  const l=document.getElementById('log');
+  l.textContent+=new Date().toISOString()+' '+msg+'\n';
+  l.scrollTop=l.scrollHeight;
+}
+window.onerror=(m,s,l,c,e)=>log('❌ '+(e?e.message:m));
+
+(async () => {
+  const head = new window.TalkingHead(document.getElementById('root'), {
+    lipsyncModules:['en']
+  });
+
+  await head.showAvatar({ url:modelUrl, camDistance:camDist });
+  log('✅ avatar loaded');
+
+  setTimeout(() =>
+    head.speakText('Hello, this UMD build works without import maps.'),
+    1000);
+})();
+</script>
+</body></html>
